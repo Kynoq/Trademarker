@@ -13,6 +13,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.java.JavaPlugin;
+import java.util.Objects;
+
 
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -51,12 +53,6 @@ public final class Trademarker extends JavaPlugin implements Listener {
         return false;
     }
 
-    public static Player getOwnerOfMap(ItemStack map){
-        ItemMeta meta = map.getItemMeta();
-        String ownerUUID = meta.getPersistentDataContainer().get(TRADEMARK_OWNER_KEY, PersistentDataType.STRING);
-        return Bukkit.getPlayer(UUID.fromString(ownerUUID));
-    }
-
     public static boolean isTrademarkedMap(ItemStack map){
         if(map == null || map.getAmount()==0) return false;
         if (map.getType() != Material.FILLED_MAP) return false;
@@ -86,9 +82,9 @@ public final class Trademarker extends JavaPlugin implements Listener {
         reloadConfig();
 
         this.getServer().getPluginManager().registerEvents(new CopyEvents(this), this);
-        getCommand("trademark").setExecutor(new TrademarkCommand(this));
-        getCommand("trademark").setTabCompleter(new TrademarkTab());
-        getCommand("trademarkreload").setExecutor(new ReloadCommand(this));
+        Objects.requireNonNull(getCommand("trademark")).setExecutor(new TrademarkCommand(this));
+        Objects.requireNonNull(getCommand("trademark")).setTabCompleter(new TrademarkTab());
+        Objects.requireNonNull(getCommand("trademarkreload")).setExecutor(new ReloadCommand(this));
     }
 
 }
