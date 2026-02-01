@@ -37,11 +37,11 @@ public class CopyEvents implements Listener {
         if(!event.getInventory().getType().equals(InventoryType.CARTOGRAPHY)) return;
 
         CartographyInventory inv = (CartographyInventory) event.getInventory();
-        ItemStack item = inv.getItem(2);
+        ItemStack inputMap = inv.getItem(0);
 
-        if(!isTrademarkedMap(item)) return;
+        if(!isTrademarkedMap(inputMap)) return;
 
-        if (!canCopyMap( (Player) event.getWhoClicked(), item)) {
+        if (!canCopyMap((Player) event.getWhoClicked(), inputMap)) {
             event.setCancelled(true);
             event.getWhoClicked().sendMessage(Trademarker.colorCode(main.getConfig().getString("lang.cant_duplicate")));
         }

@@ -22,6 +22,7 @@ public final class Trademarker extends JavaPlugin implements Listener {
 
     public static final NamespacedKey TRADEMARK_OWNER_KEY = new NamespacedKey("tradermarker","owner");
     private static final Pattern pattern = Pattern.compile("#[a-fA-F0-9]{6}");
+
     public static String colorCode(String message) {
         Matcher matcher = pattern.matcher(message);
         while (matcher.find()) {
@@ -40,15 +41,28 @@ public final class Trademarker extends JavaPlugin implements Listener {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
+    public static UUID getOwnerUUIDOfMap(ItemStack map) {
+        if (map == null || !map.hasItemMeta()) return null;
+
+        ItemMeta meta = map.getItemMeta();
+        String ownerUUID = meta.getPersistentDataContainer().get(TRADEMARK_OWNER_KEY, PersistentDataType.STRING);
+        if (ownerUUID == null) return null;
+
+        try {
+            return UUID.fromString(ownerUUID);
+        } catch (IllegalArgumentException ex) {
+            return null;
+        }
+    }
+
     public static boolean isMapOwner(Player player, ItemStack map){
-        Player owner = getOwnerOfMap(map);
-        return player.getUniqueId() == owner.getUniqueId();
+        UUID ownerUUID = getOwnerUUIDOfMap(map);
+        return ownerUUID != null && ownerUUID.equals(player.getUniqueId());
     }
 
     public static boolean canCopyMap(Player player, ItemStack map){
-        if (isMapOwner(player, map)) return true;
         if (player.hasPermission("trademarker.bypass")) return true;
-        return false;
+        return isMapOwner(player, map);
     }
 
     public static Player getOwnerOfMap(ItemStack map){
