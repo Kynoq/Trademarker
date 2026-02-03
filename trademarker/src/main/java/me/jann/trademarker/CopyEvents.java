@@ -37,7 +37,7 @@ public class CopyEvents implements Listener {
         if(!event.getInventory().getType().equals(InventoryType.CARTOGRAPHY)) return;
 
         CartographyInventory inv = (CartographyInventory) event.getInventory();
-        ItemStack inputMap = inv.getItem(0);
+        ItemStack inputMap = inv.getItem(2);
 
         if(!isTrademarkedMap(inputMap)) return;
 
